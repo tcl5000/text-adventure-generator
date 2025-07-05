@@ -81,7 +81,7 @@
         }
 
         textarea {
-            min-height: 120px;
+            min-height: 100px;
             resize: vertical;
             font-family: 'Courier New', monospace;
         }
@@ -159,12 +159,6 @@
             border-radius: 10px;
             text-align: center;
             border: 2px solid #e9ecef;
-            transition: transform 0.2s ease;
-        }
-
-        .stat:hover {
-            transform: translateY(-2px);
-            border-color: #4facfe;
         }
 
         .stat-number {
@@ -179,7 +173,6 @@
             color: #666;
             text-transform: uppercase;
             font-weight: 600;
-            letter-spacing: 0.5px;
         }
 
         .action-buttons {
@@ -205,7 +198,6 @@
 
         .download-btn:hover {
             background: #218838;
-            transform: translateY(-2px);
         }
 
         .preview-btn {
@@ -215,7 +207,6 @@
 
         .preview-btn:hover {
             background: #5a6268;
-            transform: translateY(-2px);
         }
 
         .info-box {
@@ -223,61 +214,6 @@
             border: 1px solid #ffeaa7;
             padding: 20px;
             border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .features {
-            background: white;
-            padding: 40px 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-
-        .features h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 2rem;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-        }
-
-        .feature {
-            text-align: center;
-            padding: 20px;
-        }
-
-        .feature h3 {
-            color: #4facfe;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-        }
-
-        .feature p {
-            color: #666;
-            font-size: 14px;
-        }
-
-        footer {
-            text-align: center;
-            color: white;
-            opacity: 0.8;
-            padding: 20px;
-            font-size: 14px;
-        }
-
-        footer a {
-            color: white;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
         }
 
         @media (max-width: 768px) {
@@ -296,10 +232,6 @@
             .action-buttons {
                 flex-direction: column;
             }
-            
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
@@ -313,7 +245,7 @@
         <div class="form-section">
             <div class="form-group">
                 <label for="gameTitle">Game Title</label>
-                <input type="text" id="gameTitle" value="The Secret Vineyard Sanctuary" placeholder="Enter your adventure title">
+                <input type="text" id="gameTitle" value="The Secret Vineyard Sanctuary">
             </div>
 
             <div class="form-group">
@@ -333,12 +265,6 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <label for="storyboardInput">Custom Storyboard (Optional)</label>
-                <textarea id="storyboardInput" placeholder="Paste your markdown storyboard here, or leave blank to use the default vineyard story..."></textarea>
-                <small>Use our structured markdown format for best results</small>
-            </div>
-
             <button class="btn" onclick="generateAdventure()">🎮 Generate Adventure</button>
         </div>
 
@@ -356,7 +282,7 @@
                     <div class="stat-label">Scenes</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-number" id="wordCount">750</div>
+                    <div class="stat-number" id="wordCount">1000</div>
                     <div class="stat-label">Words</div>
                 </div>
                 <div class="stat">
@@ -364,7 +290,7 @@
                     <div class="stat-label">Minutes</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-number" id="costEst">Free</div>
+                    <div class="stat-number">Free</div>
                     <div class="stat-label">Cost</div>
                 </div>
             </div>
@@ -376,40 +302,13 @@
             
             <div class="info-box">
                 <strong>✅ Your Adventure is Ready!</strong><br>
-                Download the complete HTML file or preview it in a new tab. The game includes character selection, multiple scenes, and the full interactive story.
-            </div>
-        </div>
-
-        <div class="features">
-            <h2>🌟 Features</h2>
-            <div class="feature-grid">
-                <div class="feature">
-                    <h3>📝 Storyboard-Driven</h3>
-                    <p>Upload custom markdown storyboards or use our vineyard example</p>
-                </div>
-                <div class="feature">
-                    <h3>🎨 Retro Styling</h3>
-                    <p>Classic terminal green-on-black aesthetic with pixel-perfect design</p>
-                </div>
-                <div class="feature">
-                    <h3>📱 Mobile Ready</h3>
-                    <p>Responsive design works perfectly on all devices</p>
-                </div>
-                <div class="feature">
-                    <h3>⚡ Self-Contained</h3>
-                    <p>Generated games work offline with no dependencies</p>
-                </div>
+                Download the complete HTML file or preview it in a new tab.
             </div>
         </div>
     </div>
 
-    <footer>
-        <p>Built with ❤️ for interactive storytelling • <a href="https://github.com/yourusername/text-adventure-generator">GitHub</a></p>
-    </footer>
-
     <script>
         let gameContent = "";
-        let currentGameBlob = null;
 
         function generateAdventure() {
             const btn = document.querySelector('.btn');
@@ -419,222 +318,181 @@
             document.getElementById('statusDiv').style.display = 'block';
             document.getElementById('resultDiv').style.display = 'none';
             
-            updateProgress('Initializing game engine...', 0);
+            updateProgress('Initializing...', 0);
             
+            setTimeout(() => updateProgress('Building scenes...', 25), 300);
+            setTimeout(() => updateProgress('Creating characters...', 50), 800);
+            setTimeout(() => updateProgress('Adding retro styling...', 75), 1300);
             setTimeout(() => {
-                updateProgress('Parsing storyboard content...', 20);
-            }, 300);
-            
-            setTimeout(() => {
-                updateProgress('Creating character profiles...', 40);
-            }, 800);
-            
-            setTimeout(() => {
-                updateProgress('Building interactive scenes...', 60);
-            }, 1300);
-            
-            setTimeout(() => {
-                updateProgress('Generating retro styling...', 80);
-            }, 1800);
-            
-            setTimeout(() => {
-                updateProgress('Finalizing game package...', 100);
+                updateProgress('Complete!', 100);
                 completeGeneration();
-            }, 2300);
+            }, 1800);
         }
 
         function completeGeneration() {
-            const title = document.getElementById('gameTitle').value || "The Secret Vineyard Sanctuary";
+            const title = document.getElementById('gameTitle').value || "Adventure Game";
             const length = document.getElementById('adventureLength').value;
             const style = document.getElementById('storyStyle').value;
-            const customStoryboard = document.getElementById('storyboardInput').value.trim();
             
-            gameContent = createGameHTML(title, length, style, customStoryboard);
-            currentGameBlob = new Blob([gameContent], {type: 'text/html'});
+            gameContent = createGameHTML(title, length, style);
             
-            updateStats(length, style);
+            const sceneCount = length === 'short' ? 3 : length === 'medium' ? 5 : 8;
+            const wordCount = sceneCount * (style === 'rich' ? 200 : 150);
+            const playTime = Math.ceil(sceneCount * 3);
+            
+            document.getElementById('sceneCount').textContent = sceneCount;
+            document.getElementById('wordCount').textContent = wordCount;
+            document.getElementById('playTime').textContent = playTime;
             
             document.getElementById('statusDiv').style.display = 'none';
             document.getElementById('resultDiv').style.display = 'block';
-            document.getElementById('resultDiv').scrollIntoView({behavior: 'smooth'});
             
             const btn = document.querySelector('.btn');
             btn.disabled = false;
             btn.textContent = '🎮 Generate Adventure';
         }
 
-        function updateStats(length, style) {
-            const sceneCount = length === 'short' ? 3 : length === 'medium' ? 5 : 8;
-            const wordMultiplier = style === 'rich' ? 200 : 150;
-            const wordCount = sceneCount * wordMultiplier;
-            const playTime = Math.ceil(sceneCount * 3.5);
-            
-            document.getElementById('sceneCount').textContent = sceneCount;
-            document.getElementById('wordCount').textContent = wordCount.toLocaleString();
-            document.getElementById('playTime').textContent = playTime;
-        }
-
-        function createGameHTML(title, length, style, customStoryboard) {
+        function createGameHTML(title, length, style) {
             const sceneCount = length === 'short' ? 3 : length === 'medium' ? 5 : 8;
             
             let scenes = [
-                "You discover the mysterious vineyard gate hidden behind ivy and wild roses. Your friends gather around as you examine the weathered nameplate.",
-                "You enter the forgotten vineyard and see rows of ancient, gnarled vines. The air is heavy with the scent of earth and untold stories.",
-                "You find an old tool shed filled with wine-making equipment from another era. Everything is covered in dust but remarkably well-preserved.",
-                "You discover a journal with notes about the legendary Elixir of Balance. The pages speak of harmony between work, family, and dreams.",
-                "You begin to understand the vineyard's history and the family who once lived here. Their story mirrors your own search for balance.",
-                "You work together to restore part of the vineyard, finding unexpected satisfaction in the collaborative labor.",
-                "A breakthrough moment reveals the true secret of the Elixir of Balance. It's not about the wine - it's about the journey shared with friends.",
-                "Your family calls just as you make your greatest discovery, grounding you in what truly matters most."
-            ];
-            
-            if (customStoryboard) {
-                const customScenes = parseCustomStoryboard(customStoryboard);
-                if (customScenes.length > 0) {
-                    scenes = customScenes;
-                }
-            }
-            
-            scenes = scenes.slice(0, sceneCount);
+                "You discover a mysterious vineyard gate hidden behind ivy and wild roses.",
+                "You enter the forgotten vineyard and see rows of ancient, gnarled vines.",
+                "You find an old tool shed filled with wine-making equipment from another era.",
+                "You discover a journal with notes about the legendary Elixir of Balance.",
+                "You begin to understand the vineyard's history and the family who once lived here.",
+                "You work together to restore part of the vineyard, finding satisfaction in the labor.",
+                "A breakthrough moment reveals the true secret of the Elixir of Balance.",
+                "Your family calls just as you make your greatest discovery."
+            ].slice(0, sceneCount);
             
             if (style === 'rich') {
-                scenes = scenes.map(scene => {
-                    const enhancements = [
-                        " The late afternoon light filters through the leaves, casting dancing shadows.",
-                        " You feel the weight of history in every stone and vine.",
-                        " The air is thick with the scent of earth and possibility.",
-                        " A gentle breeze carries the whisper of forgotten stories.",
-                        " The moment feels suspended between past and future."
-                    ];
-                    const enhancement = enhancements[Math.floor(Math.random() * enhancements.length)];
-                    return scene + enhancement;
-                });
+                scenes = scenes.map(scene => scene + " The air is thick with the scent of earth and possibility.");
             }
-            
-            return buildGameHTML(title, scenes);
-        }
 
-        function parseCustomStoryboard(storyboard) {
-            const dayPattern = /\*\*Day \d+:.*?\*\*\s*\n(.*?)(?=\*\*Day \d+:|$)/gs;
-            const matches = storyboard.match(dayPattern);
-            
-            if (matches) {
-                return matches.map(match => {
-                    const lines = match.split('\n').filter(line => line.trim());
-                    return lines.slice(1).join(' ').trim();
-                });
-            }
-            
-            return [];
-        }
-
-        function buildGameHTML(title, scenes) {
             return `<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${title}</title>
     <style>
-        body {
-            font-family: 'Courier New', monospace;
-            background: #000;
-            color: #00ff00;
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-        }
-        .game-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .scene {
-            margin-bottom: 30px;
-            padding: 20px;
-            border: 1px solid #00ff00;
-            border-radius: 5px;
-        }
-        .choices {
-            margin-top: 20px;
-        }
-        .choice-btn {
-            background: #000;
-            color: #00ff00;
-            border: 1px solid #00ff00;
-            padding: 10px 20px;
-            margin: 5px;
-            cursor: pointer;
-            font-family: 'Courier New', monospace;
-        }
-        .choice-btn:hover {
-            background: #00ff00;
-            color: #000;
-        }
-        .hidden {
-            display: none;
-        }
-        .title {
-            text-align: center;
-            font-size: 2em;
-            margin-bottom: 30px;
-            text-shadow: 0 0 10px #00ff00;
-        }
+        body { font-family: monospace; background: #000; color: #00ff00; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; border: 2px solid #00ff00; padding: 20px; border-radius: 10px; }
+        .title { color: #ffff00; text-align: center; font-size: 24px; margin-bottom: 20px; text-transform: uppercase; }
+        .scene { margin-bottom: 25px; padding: 20px; border: 1px solid #004400; border-radius: 8px; background: rgba(0, 40, 0, 0.5); }
+        .scene h3 { color: #ffff00; margin-bottom: 15px; }
+        .choice { background: transparent; color: #00ff00; border: 2px solid #00ff00; padding: 12px 20px; margin: 8px; border-radius: 5px; cursor: pointer; font-family: inherit; transition: all 0.3s ease; }
+        .choice:hover { background: #00ff00; color: #000; }
+        .character-info { background: rgba(100, 0, 100, 0.3); border: 1px solid #ff00ff; padding: 15px; margin: 15px 0; border-radius: 5px; }
+        .complete { text-align: center; font-size: 20px; color: #ffff00; margin: 30px 0; padding: 30px; border: 3px solid #ffff00; border-radius: 10px; }
+        .progress { position: fixed; bottom: 20px; right: 20px; background: rgba(0, 0, 0, 0.9); padding: 10px 15px; border: 1px solid #00ff00; border-radius: 5px; }
+        @media (max-width: 600px) { .choice { display: block; width: 100%; margin: 5px 0; } }
     </style>
 </head>
 <body>
-    <div class="game-container">
+    <div class="container">
         <div class="title">${title}</div>
-        <div id="game-content">
-            ${scenes.map((scene, index) => `
-                <div class="scene ${index === 0 ? '' : 'hidden'}" id="scene-${index}">
-                    <p>${scene}</p>
-                    <div class="choices">
-                        ${index < scenes.length - 1 ? 
-                            `<button class="choice-btn" onclick="nextScene(${index + 1})">Continue...</button>` :
-                            `<button class="choice-btn" onclick="restartGame()">Play Again</button>`
-                        }
-                    </div>
-                </div>
-            `).join('')}
+        <div id="content">
+            <div class="scene">
+                <h3>🎭 Choose Your Character</h3>
+                <p>Welcome to your adventure! Choose your character to begin the journey.</p>
+            </div>
+            <div style="text-align: center;">
+                <button class="choice" onclick="startGame('Sam')">🗂️ Sam the Planner</button>
+                <button class="choice" onclick="startGame('Riley')">🎨 Riley the Artist</button>
+                <button class="choice" onclick="startGame('Morgan')">🍷 Morgan the Realist</button>
+                <button class="choice" onclick="startGame('Casey')">🌱 Casey the Dreamer</button>
+            </div>
         </div>
+        <div class="progress" id="progress">Choose Your Character</div>
     </div>
+    
     <script>
-        function nextScene(sceneIndex) {
-            document.querySelectorAll('.scene').forEach(scene => scene.classList.add('hidden'));
-            document.getElementById('scene-' + sceneIndex).classList.remove('hidden');
+        const scenes = ${JSON.stringify(scenes)};
+        let currentScene = 0;
+        let selectedCharacter = "";
+        
+        const characterTraits = {
+            "Sam": "You approach challenges with careful planning and organization.",
+            "Riley": "You see beauty and artistic potential in every situation.",
+            "Morgan": "You bring practical wisdom and real-world knowledge.",
+            "Casey": "You connect intuitively with nature and believe in possibilities."
+        };
+
+        function startGame(character) {
+            selectedCharacter = character;
+            showScene(0);
         }
-        function restartGame() {
-            document.querySelectorAll('.scene').forEach(scene => scene.classList.add('hidden'));
-            document.getElementById('scene-0').classList.remove('hidden');
+
+        function showScene(sceneIndex) {
+            if (sceneIndex >= scenes.length) {
+                document.getElementById("content").innerHTML = 
+                    '<div class="complete">' +
+                    '<h2>�� Adventure Complete!</h2>' +
+                    '<p>You have discovered the secrets of the vineyard and the true meaning of balance.</p>' +
+                    '<p><strong>As ' + selectedCharacter + ':</strong> ' + characterTraits[selectedCharacter] + '</p>' +
+                    '</div>';
+                document.getElementById("progress").innerHTML = "🎉 Complete!";
+                return;
+            }
+            
+            currentScene = sceneIndex;
+            const sceneHtml = 
+                '<div class="scene">' +
+                '<h3>Day ' + (sceneIndex + 1) + ' - ' + selectedCharacter + '</h3>' +
+                (sceneIndex === 0 ? '<div class="character-info"><strong>' + selectedCharacter + ':</strong> ' + characterTraits[selectedCharacter] + '</div>' : '') +
+                '<p>' + scenes[sceneIndex] + '</p>' +
+                '<button class="choice" onclick="nextScene()">Continue Adventure →</button>' +
+                '</div>';
+            
+            document.getElementById("content").innerHTML = sceneHtml;
+            document.getElementById("progress").innerHTML = "Day " + (sceneIndex + 1) + " of " + scenes.length;
+        }
+
+        function nextScene() {
+            showScene(currentScene + 1);
         }
     </script>
 </body>
 </html>`;
         }
 
-        function updateProgress(message, percentage) {
-            document.getElementById('statusText').textContent = message;
-            document.getElementById('progressFill').style.width = percentage + '%';
+        function updateProgress(text, percent) {
+            document.getElementById('statusText').textContent = text;
+            document.getElementById('progressFill').style.width = percent + '%';
         }
 
         function downloadGame() {
-            if (currentGameBlob) {
-                const url = URL.createObjectURL(currentGameBlob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'adventure-game.html';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
+            if (!gameContent) {
+                alert('Please generate an adventure first!');
+                return;
             }
+            
+            const title = document.getElementById('gameTitle').value || "adventure";
+            const filename = title.toLowerCase().replace(/[^a-z0-9]/g, '_') + '.html';
+            
+            const blob = new Blob([gameContent], {type: 'text/html'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
 
         function previewGame() {
-            if (currentGameBlob) {
-                const url = URL.createObjectURL(currentGameBlob);
-                window.open(url, '_blank');
+            if (!gameContent) {
+                alert('Please generate an adventure first!');
+                return;
             }
+            
+            const blob = new Blob([gameContent], {type: 'text/html'});
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+            
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
         }
     </script>
 </body>
