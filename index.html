@@ -5,351 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text Adventure Game Generator</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            background: white;
-            padding: 40px 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            color: #4facfe;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .header p {
-            color: #666;
-            font-size: 1.1rem;
-        }
-
-        .form-section {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #555;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #4facfe;
-            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .status {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            display: none;
-        }
-
-        .progress {
-            width: 100%;
-            height: 8px;
-            background: #f0f0f0;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 15px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-            width: 0%;
-            transition: width 0.5s ease;
-            border-radius: 4px;
-        }
-
-        .result {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            display: none;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .stat {
-            background: #f8f9ff;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            border: 2px solid #e9ecef;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #4facfe;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #666;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .download-btn, .preview-btn {
-            flex: 1;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .download-btn {
-            background: #28a745;
-            color: white;
-        }
-
-        .download-btn:hover {
-            background: #218838;
-        }
-
-        .preview-btn {
-            background: #6c757d;
-            color: white;
-        }
-
-        .preview-btn:hover {
-            background: #5a6268;
-        }
-
-        .info-box {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            padding: 20px;
-            border-radius: 8px;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
-        }
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; padding: 20px; min-height: 100vh; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        h1 { color: #4facfe; text-align: center; font-size: 2.5rem; margin-bottom: 10px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; color: #555; }
+        input, select { width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 14px; box-sizing: border-box; }
+        .btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 15px 30px; font-size: 16px; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; margin: 20px 0; transition: transform 0.2s ease; }
+        .btn:hover { transform: translateY(-2px); }
+        .result { display: none; margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px; }
+        .download-btn { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; margin: 10px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🎮 Text Adventure Game Generator</h1>
-            <p>Transform storyboards into interactive adventures</p>
+        <h1>🎮 Text Adventure Game Generator</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 30px;">Transform storyboards into interactive adventures</p>
+        
+        <div class="form-group">
+            <label for="gameTitle">Game Title</label>
+            <input type="text" id="gameTitle" value="The Secret Vineyard Sanctuary">
         </div>
-
-        <div class="form-section">
-            <div class="form-group">
-                <label for="gameTitle">Game Title</label>
-                <input type="text" id="gameTitle" value="The Secret Vineyard Sanctuary">
-            </div>
-
-            <div class="form-group">
-                <label for="adventureLength">Adventure Length</label>
-                <select id="adventureLength">
-                    <option value="short">Quick Adventure (3 scenes)</option>
-                    <option value="medium" selected>Standard Adventure (5 scenes)</option>
-                    <option value="long">Epic Adventure (8 scenes)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="storyStyle">Story Style</label>
-                <select id="storyStyle">
-                    <option value="simple">Simple Descriptions</option>
-                    <option value="rich" selected>Rich Atmospheric Text</option>
-                </select>
-            </div>
-
-            <button class="btn" onclick="generateAdventure()">🎮 Generate Adventure</button>
+        
+        <div class="form-group">
+            <label for="adventureLength">Adventure Length</label>
+            <select id="adventureLength">
+                <option value="short">Quick Adventure (3 scenes)</option>
+                <option value="medium" selected>Standard Adventure (5 scenes)</option>
+                <option value="long">Epic Adventure (8 scenes)</option>
+            </select>
         </div>
-
-        <div class="status" id="statusDiv">
-            <div id="statusText">Creating your adventure...</div>
-            <div class="progress">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-        </div>
-
-        <div class="result" id="resultDiv">
-            <div class="stats">
-                <div class="stat">
-                    <div class="stat-number" id="sceneCount">5</div>
-                    <div class="stat-label">Scenes</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number" id="wordCount">1000</div>
-                    <div class="stat-label">Words</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number" id="playTime">15</div>
-                    <div class="stat-label">Minutes</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">Free</div>
-                    <div class="stat-label">Cost</div>
-                </div>
-            </div>
-
-            <div class="action-buttons">
-                <button class="download-btn" onclick="downloadGame()">💾 Download Game</button>
-                <button class="preview-btn" onclick="previewGame()">👁️ Preview Game</button>
-            </div>
-            
-            <div class="info-box">
-                <strong>✅ Your Adventure is Ready!</strong><br>
-                Download the complete HTML file or preview it in a new tab.
-            </div>
+        
+        <button class="btn" onclick="generateGame()">🎮 Generate Adventure</button>
+        
+        <div class="result" id="result">
+            <h3>✅ Your Adventure is Ready!</h3>
+            <p>Click below to download your complete text adventure game:</p>
+            <button class="download-btn" onclick="downloadGame()">💾 Download Game</button>
+            <button class="download-btn" onclick="previewGame()">👁️ Preview Game</button>
         </div>
     </div>
 
     <script>
         let gameContent = "";
-
-        function generateAdventure() {
-            const btn = document.querySelector('.btn');
-            btn.disabled = true;
-            btn.textContent = '🔄 Generating...';
-            
-            document.getElementById('statusDiv').style.display = 'block';
-            document.getElementById('resultDiv').style.display = 'none';
-            
-            updateProgress('Initializing...', 0);
-            
-            setTimeout(() => updateProgress('Building scenes...', 25), 300);
-            setTimeout(() => updateProgress('Creating characters...', 50), 800);
-            setTimeout(() => updateProgress('Adding retro styling...', 75), 1300);
-            setTimeout(() => {
-                updateProgress('Complete!', 100);
-                completeGeneration();
-            }, 1800);
-        }
-
-        function completeGeneration() {
+        
+        function generateGame() {
             const title = document.getElementById('gameTitle').value || "Adventure Game";
             const length = document.getElementById('adventureLength').value;
-            const style = document.getElementById('storyStyle').value;
-            
-            gameContent = createGameHTML(title, length, style);
             
             const sceneCount = length === 'short' ? 3 : length === 'medium' ? 5 : 8;
-            const wordCount = sceneCount * (style === 'rich' ? 200 : 150);
-            const playTime = Math.ceil(sceneCount * 3);
-            
-            document.getElementById('sceneCount').textContent = sceneCount;
-            document.getElementById('wordCount').textContent = wordCount;
-            document.getElementById('playTime').textContent = playTime;
-            
-            document.getElementById('statusDiv').style.display = 'none';
-            document.getElementById('resultDiv').style.display = 'block';
-            
-            const btn = document.querySelector('.btn');
-            btn.disabled = false;
-            btn.textContent = '🎮 Generate Adventure';
-        }
-
-        function createGameHTML(title, length, style) {
-            const sceneCount = length === 'short' ? 3 : length === 'medium' ? 5 : 8;
-            
-            let scenes = [
+            const scenes = [
                 "You discover a mysterious vineyard gate hidden behind ivy and wild roses.",
                 "You enter the forgotten vineyard and see rows of ancient, gnarled vines.",
                 "You find an old tool shed filled with wine-making equipment from another era.",
@@ -360,136 +65,31 @@
                 "Your family calls just as you make your greatest discovery."
             ].slice(0, sceneCount);
             
-            if (style === 'rich') {
-                scenes = scenes.map(scene => scene + " The air is thick with the scent of earth and possibility.");
-            }
-
-            const escapedTitle = title.replace(/"/g, '&quot;');
-            const escapedScenes = JSON.stringify(scenes);
-
-            return `<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>${escapedTitle}</title>
-    <style>
-        body { font-family: monospace; background: #000; color: #00ff00; padding: 20px; line-height: 1.6; }
-        .container { max-width: 800px; margin: 0 auto; border: 2px solid #00ff00; padding: 20px; border-radius: 10px; }
-        .title { color: #ffff00; text-align: center; font-size: 24px; margin-bottom: 20px; text-transform: uppercase; }
-        .scene { margin-bottom: 25px; padding: 20px; border: 1px solid #004400; border-radius: 8px; background: rgba(0, 40, 0, 0.5); }
-        .scene h3 { color: #ffff00; margin-bottom: 15px; }
-        .choice { background: transparent; color: #00ff00; border: 2px solid #00ff00; padding: 12px 20px; margin: 8px; border-radius: 5px; cursor: pointer; font-family: inherit; transition: all 0.3s ease; }
-        .choice:hover { background: #00ff00; color: #000; }
-        .character-info { background: rgba(100, 0, 100, 0.3); border: 1px solid #ff00ff; padding: 15px; margin: 15px 0; border-radius: 5px; }
-        .complete { text-align: center; font-size: 20px; color: #ffff00; margin: 30px 0; padding: 30px; border: 3px solid #ffff00; border-radius: 10px; }
-        .progress { position: fixed; bottom: 20px; right: 20px; background: rgba(0, 0, 0, 0.9); padding: 10px 15px; border: 1px solid #00ff00; border-radius: 5px; }
-        @media (max-width: 600px) { .choice { display: block; width: 100%; margin: 5px 0; } }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="title">${escapedTitle}</div>
-        <div id="content">
-            <div class="scene">
-                <h3>Choose Your Character</h3>
-                <p>Welcome to your adventure! Choose your character to begin the journey.</p>
-            </div>
-            <div style="text-align: center;">
-                <button class="choice" onclick="startGame('Sam')">Sam the Planner</button>
-                <button class="choice" onclick="startGame('Riley')">Riley the Artist</button>
-                <button class="choice" onclick="startGame('Morgan')">Morgan the Realist</button>
-                <button class="choice" onclick="startGame('Casey')">Casey the Dreamer</button>
-            </div>
-        </div>
-        <div class="progress" id="progress">Choose Your Character</div>
-    </div>
-    
-    <script>
-        const scenes = ${escapedScenes};
-        let currentScene = 0;
-        let selectedCharacter = "";
+            gameContent = createGameHTML(title, scenes);
+            document.getElementById('result').style.display = 'block';
+        }
         
-        const characterTraits = {
-            "Sam": "You approach challenges with careful planning and organization.",
-            "Riley": "You see beauty and artistic potential in every situation.",
-            "Morgan": "You bring practical wisdom and real-world knowledge.",
-            "Casey": "You connect intuitively with nature and believe in possibilities."
-        };
-
-        function startGame(character) {
-            selectedCharacter = character;
-            showScene(0);
+        function createGameHTML(title, scenes) {
+            const sceneStr = JSON.stringify(scenes);
+            return '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + title + '</title><style>body{font-family:monospace;background:#000;color:#00ff00;padding:20px}.container{max-width:700px;margin:0 auto;border:2px solid #00ff00;padding:20px;border-radius:10px}.title{color:#ffff00;text-align:center;font-size:24px;margin-bottom:20px}.scene{margin:20px 0;padding:15px;border:1px solid #004400;border-radius:5px}.choice{background:transparent;color:#00ff00;border:1px solid #00ff00;padding:10px 15px;margin:5px;cursor:pointer;border-radius:5px}.choice:hover{background:#00ff00;color:#000}</style></head><body><div class="container"><div class="title">' + title + '</div><div id="content"><div class="scene"><h3>Choose Your Character</h3><p>Select your perspective:</p><button class="choice" onclick="startGame(\'Sam\')">Sam the Planner</button><button class="choice" onclick="startGame(\'Riley\')">Riley the Artist</button><button class="choice" onclick="startGame(\'Morgan\')">Morgan the Realist</button><button class="choice" onclick="startGame(\'Casey\')">Casey the Dreamer</button></div></div></div><script>const scenes=' + sceneStr + ';let currentScene=0;let character="";function startGame(char){character=char;showScene(0)}function showScene(index){if(index>=scenes.length){document.getElementById("content").innerHTML="<div class=\\"scene\\"><h2>Adventure Complete!</h2><p>You discovered the secrets as "+character+"!</p></div>";return}document.getElementById("content").innerHTML="<div class=\\"scene\\"><h3>Day "+(index+1)+" - "+character+"</h3><p>"+scenes[index]+"</p><button class=\\"choice\\" onclick=\\"showScene("+(index+1)+")\">Continue</button></div>"}</script></body></html>';
         }
-
-        function showScene(sceneIndex) {
-            if (sceneIndex >= scenes.length) {
-                document.getElementById("content").innerHTML = 
-                    '<div class="complete">' +
-                    '<h2>Adventure Complete!</h2>' +
-                    '<p>You have discovered the secrets of the vineyard and the true meaning of balance.</p>' +
-                    '<p><strong>As ' + selectedCharacter + ':</strong> ' + characterTraits[selectedCharacter] + '</p>' +
-                    '</div>';
-                document.getElementById("progress").innerHTML = "Complete!";
-                return;
-            }
-            
-            currentScene = sceneIndex;
-            const sceneHtml = 
-                '<div class="scene">' +
-                '<h3>Day ' + (sceneIndex + 1) + ' - ' + selectedCharacter + '</h3>' +
-                (sceneIndex === 0 ? '<div class="character-info"><strong>' + selectedCharacter + ':</strong> ' + characterTraits[selectedCharacter] + '</div>' : '') +
-                '<p>' + scenes[sceneIndex] + '</p>' +
-                '<button class="choice" onclick="nextScene()">Continue Adventure</button>' +
-                '</div>';
-            
-            document.getElementById("content").innerHTML = sceneHtml;
-            document.getElementById("progress").innerHTML = "Day " + (sceneIndex + 1) + " of " + scenes.length;
-        }
-
-        function nextScene() {
-            showScene(currentScene + 1);
-        }
-    </script>
-</body>
-</html>`;
-        }
-
-        function updateProgress(text, percent) {
-            document.getElementById('statusText').textContent = text;
-            document.getElementById('progressFill').style.width = percent + '%';
-        }
-
+        
         function downloadGame() {
-            if (!gameContent) {
-                alert('Please generate an adventure first!');
-                return;
-            }
-            
-            const title = document.getElementById('gameTitle').value || "adventure";
-            const filename = title.toLowerCase().replace(/[^a-z0-9]/g, '_') + '.html';
-            
+            if (!gameContent) { alert('Generate a game first!'); return; }
             const blob = new Blob([gameContent], {type: 'text/html'});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
+            a.download = 'adventure_game.html';
             a.click();
-            document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
-
+        
         function previewGame() {
-            if (!gameContent) {
-                alert('Please generate an adventure first!');
-                return;
-            }
-            
+            if (!gameContent) { alert('Generate a game first!'); return; }
             const blob = new Blob([gameContent], {type: 'text/html'});
             const url = URL.createObjectURL(blob);
             window.open(url, '_blank');
-            
-            setTimeout(() => URL.revokeObjectURL(url), 1000);
         }
     </script>
 </body>
