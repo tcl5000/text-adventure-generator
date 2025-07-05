@@ -4,7 +4,304 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text Adventure Game Generator</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            background: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #4facfe;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .progress {
+            width: 100%;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        .result {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            transition: transform 0.2s ease;
+        }
+
+        .stat:hover {
+            transform: translateY(-2px);
+            border-color: #4facfe;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4facfe;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .download-btn, .preview-btn {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .download-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .download-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .preview-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .preview-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .features {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .features h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .feature h3 {
+            color: #4facfe;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .feature p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -39,10 +336,10 @@
             <div class="form-group">
                 <label for="storyboardInput">Custom Storyboard (Optional)</label>
                 <textarea id="storyboardInput" placeholder="Paste your markdown storyboard here, or leave blank to use the default vineyard story..."></textarea>
-                <small>See <a href="examples/storyboard.md" target="_blank">example storyboard format</a></small>
+                <small>Use our structured markdown format for best results</small>
             </div>
 
-            <button class="btn" id="generateBtn">🎮 Generate Adventure</button>
+            <button class="btn" onclick="generateAdventure()">🎮 Generate Adventure</button>
         </div>
 
         <div class="status" id="statusDiv">
@@ -73,18 +370,13 @@
             </div>
 
             <div class="action-buttons">
-                <button class="download-btn" id="downloadBtn">💾 Download Game</button>
-                <button class="preview-btn" id="previewBtn">👁️ Preview Game</button>
+                <button class="download-btn" onclick="downloadGame()">💾 Download Game</button>
+                <button class="preview-btn" onclick="previewGame()">👁️ Preview Game</button>
             </div>
             
             <div class="info-box">
                 <strong>✅ Your Adventure is Ready!</strong><br>
                 Download the complete HTML file or preview it in a new tab. The game includes character selection, multiple scenes, and the full interactive story.
-            </div>
-
-            <div class="preview-area" id="previewArea" style="display: none;">
-                <h3>Game Preview</h3>
-                <iframe id="gamePreview" width="100%" height="400" frameborder="0"></iframe>
             </div>
         </div>
 
@@ -96,7 +388,7 @@
                     <p>Upload custom markdown storyboards or use our vineyard example</p>
                 </div>
                 <div class="feature">
-                    <h3>�� Retro Styling</h3>
+                    <h3>🎨 Retro Styling</h3>
                     <p>Classic terminal green-on-black aesthetic with pixel-perfect design</p>
                 </div>
                 <div class="feature">
@@ -109,27 +401,241 @@
                 </div>
             </div>
         </div>
-
-        <div class="examples">
-            <h2>📚 Examples</h2>
-            <div class="example-links">
-                <a href="examples/vineyard_game.html" target="_blank" class="example-link">
-                    🍷 Play Sample Vineyard Game
-                </a>
-                <a href="examples/storyboard.md" target="_blank" class="example-link">
-                    📋 View Storyboard Format
-                </a>
-                <a href="docs/README.md" target="_blank" class="example-link">
-                    📖 Read Documentation
-                </a>
-            </div>
-        </div>
     </div>
 
     <footer>
         <p>Built with ❤️ for interactive storytelling • <a href="https://github.com/yourusername/text-adventure-generator">GitHub</a></p>
     </footer>
 
-    <script src="assets/js/generator.js"></script>
+    <script>
+        let gameContent = "";
+        let currentGameBlob = null;
+
+        function generateAdventure() {
+            const btn = document.querySelector('.btn');
+            btn.disabled = true;
+            btn.textContent = '🔄 Generating...';
+            
+            document.getElementById('statusDiv').style.display = 'block';
+            document.getElementById('resultDiv').style.display = 'none';
+            
+            updateProgress('Initializing game engine...', 0);
+            
+            setTimeout(() => {
+                updateProgress('Parsing storyboard content...', 20);
+            }, 300);
+            
+            setTimeout(() => {
+                updateProgress('Creating character profiles...', 40);
+            }, 800);
+            
+            setTimeout(() => {
+                updateProgress('Building interactive scenes...', 60);
+            }, 1300);
+            
+            setTimeout(() => {
+                updateProgress('Generating retro styling...', 80);
+            }, 1800);
+            
+            setTimeout(() => {
+                updateProgress('Finalizing game package...', 100);
+                completeGeneration();
+            }, 2300);
+        }
+
+        function completeGeneration() {
+            const title = document.getElementById('gameTitle').value || "The Secret Vineyard Sanctuary";
+            const length = document.getElementById('adventureLength').value;
+            const style = document.getElementById('storyStyle').value;
+            const customStoryboard = document.getElementById('storyboardInput').value.trim();
+            
+            gameContent = createGameHTML(title, length, style, customStoryboard);
+            currentGameBlob = new Blob([gameContent], {type: 'text/html'});
+            
+            updateStats(length, style);
+            
+            document.getElementById('statusDiv').style.display = 'none';
+            document.getElementById('resultDiv').style.display = 'block';
+            document.getElementById('resultDiv').scrollIntoView({behavior: 'smooth'});
+            
+            const btn = document.querySelector('.btn');
+            btn.disabled = false;
+            btn.textContent = '🎮 Generate Adventure';
+        }
+
+        function updateStats(length, style) {
+            const sceneCount = length === 'short' ? 3 : length === 'medium' ? 5 : 8;
+            const wordMultiplier = style === 'rich' ? 200 : 150;
+            const wordCount = sceneCount * wordMultiplier;
+            const playTime = Math.ceil(sceneCount * 3.5);
+            
+            document.getElementById('sceneCount').textContent = sceneCount;
+            document.getElementById('wordCount').textContent = wordCount.toLocaleString();
+            document.getElementById('playTime').textContent = playTime;
+        }
+
+        function createGameHTML(title, length, style, customStoryboard) {
+            const sceneCount = length === 'short' ? 3 : length === 'medium' ? 5 : 8;
+            
+            let scenes = [
+                "You discover the mysterious vineyard gate hidden behind ivy and wild roses. Your friends gather around as you examine the weathered nameplate.",
+                "You enter the forgotten vineyard and see rows of ancient, gnarled vines. The air is heavy with the scent of earth and untold stories.",
+                "You find an old tool shed filled with wine-making equipment from another era. Everything is covered in dust but remarkably well-preserved.",
+                "You discover a journal with notes about the legendary Elixir of Balance. The pages speak of harmony between work, family, and dreams.",
+                "You begin to understand the vineyard's history and the family who once lived here. Their story mirrors your own search for balance.",
+                "You work together to restore part of the vineyard, finding unexpected satisfaction in the collaborative labor.",
+                "A breakthrough moment reveals the true secret of the Elixir of Balance. It's not about the wine - it's about the journey shared with friends.",
+                "Your family calls just as you make your greatest discovery, grounding you in what truly matters most."
+            ];
+            
+            if (customStoryboard) {
+                const customScenes = parseCustomStoryboard(customStoryboard);
+                if (customScenes.length > 0) {
+                    scenes = customScenes;
+                }
+            }
+            
+            scenes = scenes.slice(0, sceneCount);
+            
+            if (style === 'rich') {
+                scenes = scenes.map(scene => {
+                    const enhancements = [
+                        " The late afternoon light filters through the leaves, casting dancing shadows.",
+                        " You feel the weight of history in every stone and vine.",
+                        " The air is thick with the scent of earth and possibility.",
+                        " A gentle breeze carries the whisper of forgotten stories.",
+                        " The moment feels suspended between past and future."
+                    ];
+                    const enhancement = enhancements[Math.floor(Math.random() * enhancements.length)];
+                    return scene + enhancement;
+                });
+            }
+            
+            return buildGameHTML(title, scenes);
+        }
+
+        function parseCustomStoryboard(storyboard) {
+            const dayPattern = /\*\*Day \d+:.*?\*\*\s*\n(.*?)(?=\*\*Day \d+:|$)/gs;
+            const matches = storyboard.match(dayPattern);
+            
+            if (matches) {
+                return matches.map(match => {
+                    const lines = match.split('\n').filter(line => line.trim());
+                    return lines.slice(1).join(' ').trim();
+                });
+            }
+            
+            return [];
+        }
+
+        function buildGameHTML(title, scenes) {
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title}</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #00ff00;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .scene {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+        }
+        .choices {
+            margin-top: 20px;
+        }
+        .choice-btn {
+            background: #000;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+        }
+        .choice-btn:hover {
+            background: #00ff00;
+            color: #000;
+        }
+        .hidden {
+            display: none;
+        }
+        .title {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="title">${title}</div>
+        <div id="game-content">
+            ${scenes.map((scene, index) => `
+                <div class="scene ${index === 0 ? '' : 'hidden'}" id="scene-${index}">
+                    <p>${scene}</p>
+                    <div class="choices">
+                        ${index < scenes.length - 1 ? 
+                            `<button class="choice-btn" onclick="nextScene(${index + 1})">Continue...</button>` :
+                            `<button class="choice-btn" onclick="restartGame()">Play Again</button>`
+                        }
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    </div>
+    <script>
+        function nextScene(sceneIndex) {
+            document.querySelectorAll('.scene').forEach(scene => scene.classList.add('hidden'));
+            document.getElementById('scene-' + sceneIndex).classList.remove('hidden');
+        }
+        function restartGame() {
+            document.querySelectorAll('.scene').forEach(scene => scene.classList.add('hidden'));
+            document.getElementById('scene-0').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>`;
+        }
+
+        function updateProgress(message, percentage) {
+            document.getElementById('statusText').textContent = message;
+            document.getElementById('progressFill').style.width = percentage + '%';
+        }
+
+        function downloadGame() {
+            if (currentGameBlob) {
+                const url = URL.createObjectURL(currentGameBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'adventure-game.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        }
+
+        function previewGame() {
+            if (currentGameBlob) {
+                const url = URL.createObjectURL(currentGameBlob);
+                window.open(url, '_blank');
+            }
+        }
+    </script>
 </body>
 </html>
