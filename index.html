@@ -65,7 +65,7 @@
             color: #555;
         }
 
-        input, select, textarea {
+        input, select {
             width: 100%;
             padding: 12px;
             border: 2px solid #e9ecef;
@@ -74,16 +74,10 @@
             transition: border-color 0.3s ease;
         }
 
-        input:focus, select:focus, textarea:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: #4facfe;
             box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
-        }
-
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-            font-family: 'Courier New', monospace;
         }
 
         .btn {
@@ -370,11 +364,14 @@
                 scenes = scenes.map(scene => scene + " The air is thick with the scent of earth and possibility.");
             }
 
+            const escapedTitle = title.replace(/"/g, '&quot;');
+            const escapedScenes = JSON.stringify(scenes);
+
             return `<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>${title}</title>
+    <title>${escapedTitle}</title>
     <style>
         body { font-family: monospace; background: #000; color: #00ff00; padding: 20px; line-height: 1.6; }
         .container { max-width: 800px; margin: 0 auto; border: 2px solid #00ff00; padding: 20px; border-radius: 10px; }
@@ -391,24 +388,24 @@
 </head>
 <body>
     <div class="container">
-        <div class="title">${title}</div>
+        <div class="title">${escapedTitle}</div>
         <div id="content">
             <div class="scene">
-                <h3>🎭 Choose Your Character</h3>
+                <h3>Choose Your Character</h3>
                 <p>Welcome to your adventure! Choose your character to begin the journey.</p>
             </div>
             <div style="text-align: center;">
-                <button class="choice" onclick="startGame('Sam')">🗂️ Sam the Planner</button>
-                <button class="choice" onclick="startGame('Riley')">🎨 Riley the Artist</button>
-                <button class="choice" onclick="startGame('Morgan')">🍷 Morgan the Realist</button>
-                <button class="choice" onclick="startGame('Casey')">🌱 Casey the Dreamer</button>
+                <button class="choice" onclick="startGame('Sam')">Sam the Planner</button>
+                <button class="choice" onclick="startGame('Riley')">Riley the Artist</button>
+                <button class="choice" onclick="startGame('Morgan')">Morgan the Realist</button>
+                <button class="choice" onclick="startGame('Casey')">Casey the Dreamer</button>
             </div>
         </div>
         <div class="progress" id="progress">Choose Your Character</div>
     </div>
     
     <script>
-        const scenes = ${JSON.stringify(scenes)};
+        const scenes = ${escapedScenes};
         let currentScene = 0;
         let selectedCharacter = "";
         
@@ -428,11 +425,11 @@
             if (sceneIndex >= scenes.length) {
                 document.getElementById("content").innerHTML = 
                     '<div class="complete">' +
-                    '<h2>�� Adventure Complete!</h2>' +
+                    '<h2>Adventure Complete!</h2>' +
                     '<p>You have discovered the secrets of the vineyard and the true meaning of balance.</p>' +
                     '<p><strong>As ' + selectedCharacter + ':</strong> ' + characterTraits[selectedCharacter] + '</p>' +
                     '</div>';
-                document.getElementById("progress").innerHTML = "🎉 Complete!";
+                document.getElementById("progress").innerHTML = "Complete!";
                 return;
             }
             
@@ -442,7 +439,7 @@
                 '<h3>Day ' + (sceneIndex + 1) + ' - ' + selectedCharacter + '</h3>' +
                 (sceneIndex === 0 ? '<div class="character-info"><strong>' + selectedCharacter + ':</strong> ' + characterTraits[selectedCharacter] + '</div>' : '') +
                 '<p>' + scenes[sceneIndex] + '</p>' +
-                '<button class="choice" onclick="nextScene()">Continue Adventure →</button>' +
+                '<button class="choice" onclick="nextScene()">Continue Adventure</button>' +
                 '</div>';
             
             document.getElementById("content").innerHTML = sceneHtml;
