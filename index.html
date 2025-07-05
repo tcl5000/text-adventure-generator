@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Adventure Game Generator</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Text Adventure Game Generator</h1>
+            <p>Transform storyboards into interactive adventures</p>
+        </div>
+
+        <div class="form-section">
+            <div class="form-group">
+                <label for="gameTitle">Game Title</label>
+                <input type="text" id="gameTitle" value="The Secret Vineyard Sanctuary" placeholder="Enter your adventure title">
+            </div>
+
+            <div class="form-group">
+                <label for="adventureLength">Adventure Length</label>
+                <select id="adventureLength">
+                    <option value="short">Quick Adventure (3 scenes)</option>
+                    <option value="medium" selected>Standard Adventure (5 scenes)</option>
+                    <option value="long">Epic Adventure (8 scenes)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="storyStyle">Story Style</label>
+                <select id="storyStyle">
+                    <option value="simple">Simple Descriptions</option>
+                    <option value="rich" selected>Rich Atmospheric Text</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="storyboardInput">Custom Storyboard (Optional)</label>
+                <textarea id="storyboardInput" placeholder="Paste your markdown storyboard here, or leave blank to use the default vineyard story..."></textarea>
+                <small>See <a href="examples/storyboard.md" target="_blank">example storyboard format</a></small>
+            </div>
+
+            <button class="btn" id="generateBtn">🎮 Generate Adventure</button>
+        </div>
+
+        <div class="status" id="statusDiv">
+            <div id="statusText">Creating your adventure...</div>
+            <div class="progress">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="result" id="resultDiv">
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number" id="sceneCount">5</div>
+                    <div class="stat-label">Scenes</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="wordCount">750</div>
+                    <div class="stat-label">Words</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="playTime">15</div>
+                    <div class="stat-label">Minutes</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="costEst">Free</div>
+                    <div class="stat-label">Cost</div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="download-btn" id="downloadBtn">💾 Download Game</button>
+                <button class="preview-btn" id="previewBtn">👁️ Preview Game</button>
+            </div>
+            
+            <div class="info-box">
+                <strong>✅ Your Adventure is Ready!</strong><br>
+                Download the complete HTML file or preview it in a new tab. The game includes character selection, multiple scenes, and the full interactive story.
+            </div>
+
+            <div class="preview-area" id="previewArea" style="display: none;">
+                <h3>Game Preview</h3>
+                <iframe id="gamePreview" width="100%" height="400" frameborder="0"></iframe>
+            </div>
+        </div>
+
+        <div class="features">
+            <h2>🌟 Features</h2>
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3>📝 Storyboard-Driven</h3>
+                    <p>Upload custom markdown storyboards or use our vineyard example</p>
+                </div>
+                <div class="feature">
+                    <h3>�� Retro Styling</h3>
+                    <p>Classic terminal green-on-black aesthetic with pixel-perfect design</p>
+                </div>
+                <div class="feature">
+                    <h3>📱 Mobile Ready</h3>
+                    <p>Responsive design works perfectly on all devices</p>
+                </div>
+                <div class="feature">
+                    <h3>⚡ Self-Contained</h3>
+                    <p>Generated games work offline with no dependencies</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="examples">
+            <h2>📚 Examples</h2>
+            <div class="example-links">
+                <a href="examples/vineyard_game.html" target="_blank" class="example-link">
+                    🍷 Play Sample Vineyard Game
+                </a>
+                <a href="examples/storyboard.md" target="_blank" class="example-link">
+                    📋 View Storyboard Format
+                </a>
+                <a href="docs/README.md" target="_blank" class="example-link">
+                    📖 Read Documentation
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Built with ❤️ for interactive storytelling • <a href="https://github.com/yourusername/text-adventure-generator">GitHub</a></p>
+    </footer>
+
+    <script src="assets/js/generator.js"></script>
+</body>
+</html>
