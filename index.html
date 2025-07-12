@@ -169,26 +169,26 @@ function parseStoryboardToGame(content) {
         const titleMatch = dayContent.match(/\*\*Day \d+:\s*"([^"]+)"\s*\*\*/);
         const sceneTitle = titleMatch ? titleMatch[1] : `Day ${index + 1}`;
         
-        // Extract main description (first bullet or paragraph)
+        // Extract main deion (first bullet or paragraph)
         const lines = dayContent.split('\n').filter(line => line.trim());
-        const descriptionLine = lines.find(line => 
+        const deionLine = lines.find(line => 
             line.includes('*') && 
             !line.includes('**Family Moment**') && 
             !line.includes('**Discovery**')
         );
         
-        let description = descriptionLine ? 
-            descriptionLine.replace(/^\*\s*/, '').trim() : 
+        let deion = deionLine ? 
+            deionLine.replace(/^\*\s*/, '').trim() : 
             "Continue your adventure in the vineyard.";
             
-        // Enhance description
-        if (description.length < 50) {
-            description += " You and your friends explore deeper into this mysterious place, uncovering secrets that will change your understanding of balance and friendship.";
+        // Enhance deion
+        if (deion.length < 50) {
+            deion += " You and your friends explore deeper into this mysterious place, uncovering secrets that will change your understanding of balance and friendship.";
         }
         
         return {
             title: sceneTitle,
-            description: description,
+            deion: deion,
             dayNumber: index + 1
         };
     });
@@ -202,9 +202,9 @@ function parseStoryboardToGame(content) {
             {name: "Casey the Dreamer", personality: "Optimistic and intuitive", ability: "Connects with nature"}
         ],
         scenes: scenes.length > 0 ? scenes : [
-            {title: "The Hidden Gate", description: "Discover the mysterious vineyard entrance", dayNumber: 1},
-            {title: "First Steps", description: "Enter the forgotten vineyard", dayNumber: 2},
-            {title: "The Discovery", description: "Uncover the vineyard's secrets", dayNumber: 3}
+            {title: "The Hidden Gate", deion: "Discover the mysterious vineyard entrance", dayNumber: 1},
+            {title: "First Steps", deion: "Enter the forgotten vineyard", dayNumber: 2},
+            {title: "The Discovery", deion: "Uncover the vineyard's secrets", dayNumber: 3}
         ]
     };
 }
@@ -308,54 +308,248 @@ function createGameHTML(gameData) {
         <div class="progress" id="progress">Choose Your Character</div>
     </div>
     
+    <!-- Add this script reference just before the closing </body> tag -->
+    <script src="assets/js/enhanced-generator.js"></script>
+    
     <script>
-        const scenes = ${JSON.stringify(scenes)};
-        const characters = ${JSON.stringify(characters)};
-        let currentScene = 0;
-        let selectedCharacter = "";
-        
-        function startGame(characterName) {
-            selectedCharacter = characterName;
-            const character = characters.find(c => c.name === characterName);
-            showScene(0, character);
+        let currentGameData = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('apiStatus').className = 'api-status online';
+            document.getElementById('apiStatus').innerHTML = '🟢 Enhanced Client-Side Ready';
+            loadSample();
+        });
+
+        function loadSample() {
+            // Load your vineyard storyboard sample
+            const sampleStoryboard = `# The Secret Vineyard Sanctuary
+
+## Core Theme & Concept
+
+**Core Theme**: Finding balance in midlife through friendship, discovery, and creating something meaningful together.
+
+**Setting**: A hidden, forgotten vineyard on a countryside estate that four friends discover during their annual weekend getaway.
+
+**Central Mystery/Goal**: The creation of the "Elixir of Balance" - a legendary wine that brings clarity and joy to those seeking harmony in life's beautiful chaos.
+
+---
+
+## Characters (Player Characters)
+
+### Sam the Planner
+* **Personality**: Organized, prepared, detail-oriented, secretly yearns for spontaneity
+* **Special Ability**: Always finds useful items and resources
+* **Character Arc**: Learning to embrace uncertainty and find beauty in unplanned moments
+* **Background**: Manages family schedules like a military operation, slowly learns to delegate
+
+### Riley the Artist
+* **Personality**: Creative, intuitive, sees beauty everywhere, sometimes impractical
+* **Special Ability**: Notices hidden details and artistic elements others miss
+* **Character Arc**: Learning to ground dreams in reality while maintaining wonder
+* **Background**: Turns everyday moments into art, teaches kids to see magic in mundane
+
+### Morgan the Realist
+* **Personality**: Practical, wine-knowledgeable, skeptical but secretly hopeful
+* **Special Ability**: Understands technical aspects of wine-making and problem-solving
+* **Character Arc**: Opening heart to possibility and magic while staying grounded
+* **Background**: The "voice of reason" who slowly learns to trust in wonder
+
+### Casey the Dreamer
+* **Personality**: Optimistic, plant-intuitive, believes in magic and possibility
+* **Special Ability**: Connects with nature and senses the vineyard's "living spirit"
+* **Character Arc**: Learning to channel dreams into concrete action
+* **Background**: The family cheerleader who sees potential in every challenge
+
+---
+
+## Daily Episodes (Example Structure)
+
+**Day 1: "The Hidden Gate"**
+* Discover the mysterious vineyard gate during estate walk
+* Character selection and first glimpse of the forgotten world
+* **Family Moment**: Spouse texts about kids' schedules
+* **Discovery**: Ancient iron gate with "Harmony Vineyard" nameplate
+* **Choices**: [Examine gate closely] [Check estate map] [Ask friends' opinions] [Try to open immediately]
+
+**Day 2: "First Steps"**
+* Enter the vineyard properly, assess the scope of abandonment
+* Find the original vintner's journal with cryptic notes about the Elixir
+* **Family Moment**: Child calls for homework help via video
+* **Discovery**: The vineyard has three distinct growing areas
+* **Choices**: [Explore the journal carefully] [Investigate the vine rows] [Look for the main building] [Search for more clues about the family]
+
+**Day 3: "The Tool Shed"**
+* Explore the old equipment shed, meet quirky local hardware store owner
+* Learn about the vineyard's history from a neighbor who remembers the original family
+* **Family Moment**: Forgotten soccer practice creates scheduling chaos
+* **Discovery**: Original wine-making tools and equipment (some still usable)
+* **Choices**: [Focus on learning from neighbor] [Examine the old tools] [Ask about purchasing supplies] [Invite neighbor to help with restoration]
+
+**Day 4: "Reading the Vines"**
+* Learn to identify different grape varieties and assess soil quality
+* Discover that some vines are rare heritage varieties thought extinct
+* **Family Moment**: Teenager drama requires parental mediation
+* **Discovery**: The vineyard was designed following ancient principles
+* **Choices**: [Document the rare varieties] [Test soil conditions] [Research heritage grape value] [Plan restoration priorities]
+
+**Day 5: "Water Stories"**
+* Repair the broken irrigation system, find carved initials and dates
+* Uncover evidence of multiple generations who worked this land
+* **Family Moment**: Anniversary dinner forgotten, spouse understanding but hurt
+* **Discovery**: Underground spring feeds the vineyard naturally
+* **Choices**: [Focus on irrigation repair] [Investigate the carved messages] [Trace the spring's source] [Research the families who lived here]`;
+
+            document.getElementById('storyboardInput').value = sampleStoryboard;
         }
 
-        function showScene(sceneIndex, character) {
-            if (sceneIndex >= scenes.length) {
-                showCompletion();
+        async function generateGame() {
+            const btn = document.getElementById('generateBtn');
+            const storyboardContent = document.getElementById('storyboardInput').value.trim();
+            
+            if (!storyboardContent) {
+                alert('Please enter storyboard content or load the sample.');
                 return;
             }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span> Generating...';
             
-            currentScene = sceneIndex;
-            const scene = scenes[sceneIndex];
+            document.getElementById('statusDiv').style.display = 'block';
+            document.getElementById('resultDiv').style.display = 'none';
             
-            document.getElementById("content").innerHTML = 
-                '<div class="scene">' +
-                '<h3>Day ' + scene.dayNumber + ': ' + scene.title + '</h3>' +
-                (character && sceneIndex === 0 ? 
-                    '<div class="character-info"><strong>' + character.name + ':</strong> ' + character.personality + '</div>' : '') +
-                '<p>' + scene.description + '</p>' +
-                '<button class="choice" onclick="nextScene()">Continue Adventure →</button>' +
-                '</div>';
+            updateProgress('Parsing rich storyboard format...', 10);
+
+            await new Promise(resolve => setTimeout(resolve, 800));
+            updateProgress('Extracting character details...', 30);
             
-            document.getElementById("progress").innerHTML = "Day " + scene.dayNumber + " of " + scenes.length;
+            await new Promise(resolve => setTimeout(resolve, 600));
+            updateProgress('Building interactive scenes...', 60);
+            
+            await new Promise(resolve => setTimeout(resolve, 600));
+            updateProgress('Compiling enhanced game...', 90);
+
+            try {
+                // Use the enhanced parser from enhanced-generator.js
+                const gameData = parseStoryboardToGame(storyboardContent);
+                
+                // Generate the enhanced HTML game
+                const gameHTML = createGameHTML(gameData);
+                
+                updateProgress('Complete!', 100);
+
+                currentGameData = {
+                    html: gameHTML,
+                    metadata: {
+                        title: gameData.title,
+                        scenes: gameData.scenes.length,
+                        characters: gameData.characters.length,
+                        fileSize: gameHTML.length,
+                        estimatedPlayTime: gameData.scenes.length * 4
+                    }
+                };
+
+                setTimeout(() => {
+                    showResults(currentGameData);
+                }, 500);
+
+            } catch (error) {
+                console.error('Generation error:', error);
+                showError(error.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '🎮 Generate Adventure Game';
+            }
         }
 
-        function nextScene() {
-            const character = characters.find(c => c.name === selectedCharacter);
-            showScene(currentScene + 1, character);
+        function updateProgress(text, percent) {
+            document.getElementById('statusText').textContent = text;
+            document.getElementById('progressFill').style.width = percent + '%';
         }
-        
-        function showCompletion() {
-            document.getElementById("content").innerHTML = 
-                '<div class="scene" style="text-align: center; border-color: #ffff00;">' +
-                '<h2>🎉 Adventure Complete!</h2>' +
-                '<p>You have discovered the true meaning of your journey. The adventure may be over, but the memories and friendships will last forever.</p>' +
-                '<p><strong>Thank you for playing as ' + selectedCharacter + '!</strong></p>' +
-                '</div>';
-            document.getElementById("progress").innerHTML = "🎉 Complete!";
+
+        function showResults(gameData) {
+            const { metadata } = gameData;
+            
+            document.getElementById('sceneCount').textContent = metadata.scenes;
+            document.getElementById('characterCount').textContent = metadata.characters;
+            document.getElementById('playTime').textContent = metadata.estimatedPlayTime;
+            document.getElementById('fileSize').textContent = Math.round(metadata.fileSize / 1024);
+
+            const downloadBtn = document.getElementById('downloadBtn');
+            const previewBtn = document.getElementById('previewBtn');
+            const shareBtn = document.getElementById('shareBtn');
+            
+            downloadBtn.onclick = () => downloadGame(gameData);
+            previewBtn.onclick = () => previewGame(gameData);
+            shareBtn.onclick = () => shareGame(gameData);
+
+            document.getElementById('statusDiv').style.display = 'none';
+            document.getElementById('resultDiv').style.display = 'block';
+            document.getElementById('resultDiv').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function downloadGame(gameData) {
+            const filename = gameData.metadata.title.toLowerCase().replace(/[^a-z0-9]/g, '_') + '.html';
+            const blob = new Blob([gameData.html], {type: 'text/html'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            console.log('🎮 Game downloaded:', filename);
+        }
+
+        function previewGame(gameData) {
+            const blob = new Blob([gameData.html], {type: 'text/html'});
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank', 'width=1000,height=800');
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            
+            console.log('👁️ Game preview opened');
+        }
+
+        async function shareGame(gameData) {
+            const shareText = `Check out this adventure game I created: "${gameData.metadata.title}"`;
+            
+            try {
+                await navigator.clipboard.writeText(shareText);
+                
+                const shareBtn = document.getElementById('shareBtn');
+                const originalText = shareBtn.innerHTML;
+                shareBtn.innerHTML = '✅ Copied!';
+                shareBtn.style.background = '#28a745';
+                
+                setTimeout(() => {
+                    shareBtn.innerHTML = originalText;
+                    shareBtn.style.background = '#17a2b8';
+                }, 2000);
+                
+            } catch (error) {
+                prompt('Copy this text to share your game:', shareText);
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('statusDiv').style.display = 'none';
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-box';
+            errorDiv.innerHTML = `
+                <strong>⚠️ Generation Failed:</strong><br>
+                ${message}<br>
+                <small>Check console for details. Make sure enhanced-generator.js is loaded.</small>
+                <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; cursor: pointer;">✕</button>
+            `;
+            
+            const container = document.querySelector('.container');
+            const formSection = document.querySelector('.form-section');
+            container.insertBefore(errorDiv, formSection.nextSibling);
         }
     </script>
+                
 </body>
 </html>`;
 }
