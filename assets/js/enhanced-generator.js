@@ -1,7 +1,8 @@
-// Enhanced parser to replace the parseStoryboardToGame function in your index.html
+// Enhanced Storyboard Parser and Game Generator
+// assets/js/enhanced-generator.js
 
 function parseStoryboardToGame(content) {
-    console.log('Parsing enhanced storyboard format...');
+    console.log('🔍 Parsing enhanced storyboard format...');
     
     // Extract title
     const titleMatch = content.match(/^#\s+(.+)$/m);
@@ -87,32 +88,11 @@ function parseStoryboardToGame(content) {
             familyMoment,
             discovery,
             choices,
-            fullContent: dayContent
+            mood: determineMood(dayContent)
         };
     });
     
-    // Extract visual style info
-    const visualMatch = content.match(/### Color Palettes\s*([\s\S]*?)(?=###|$)/);
-    const visualStyle = {
-        colorPalettes: [],
-        defaultMood: 'peaceful'
-    };
-    
-    if (visualMatch) {
-        const colorLines = visualMatch[1].split('\n').filter(line => line.includes('**'));
-        colorLines.forEach(line => {
-            const colorMatch = line.match(/\*\*([^*]+)\*\*:\s*(.+)/);
-            if (colorMatch) {
-                visualStyle.colorPalettes.push({
-                    name: colorMatch[1].trim(),
-                    description: colorMatch[2].trim()
-                });
-            }
-        });
-    }
-    
-    // Determine mood based on content
-    const determineMood = (sceneContent) => {
+    function determineMood(sceneContent) {
         const content = sceneContent.toLowerCase();
         if (content.includes('mysterious') || content.includes('hidden') || content.includes('secret')) {
             return 'mysterious';
@@ -122,14 +102,9 @@ function parseStoryboardToGame(content) {
             return 'dramatic';
         }
         return 'peaceful';
-    };
+    }
     
-    // Add mood to each scene
-    scenes.forEach(scene => {
-        scene.mood = determineMood(scene.fullContent);
-    });
-    
-    console.log('Parsed game data:', {
+    console.log('✅ Parsed game data:', {
         title,
         characterCount: characters.length,
         sceneCount: scenes.length,
@@ -142,7 +117,7 @@ function parseStoryboardToGame(content) {
         setting,
         characters: characters.length > 0 ? characters : getDefaultCharacters(),
         scenes: scenes.length > 0 ? scenes : getDefaultScenes(),
-        visualStyle,
+        visualStyle: { colorPalettes: [], defaultMood: 'peaceful' },
         metadata: {
             hasRichContent: true,
             totalChoices: scenes.reduce((sum, s) => sum + s.choices.length, 0),
@@ -216,7 +191,6 @@ function getDefaultScenes() {
         }
     ];
 }
-// Add this function to the END of your existing assets/js/enhanced-generator.js file
 
 function createGameHTML(gameData) {
     const { title, coreTheme, setting, characters, scenes } = gameData;
