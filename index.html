@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text Adventure Game Generator</title>
+    <title>Text Adventure Game Generator - Enhanced with Music</title>
     <style>
         * {
             margin: 0;
@@ -106,6 +106,40 @@
             resize: vertical;
             font-family: 'Courier New', monospace;
             font-size: 13px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .option-card {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .option-card h4 {
+            color: #4facfe;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin: 0;
         }
 
         .btn {
@@ -260,6 +294,19 @@
             margin-bottom: 20px;
         }
 
+        .new-feature {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .new-feature h3 {
+            margin-bottom: 10px;
+        }
+
         .loading {
             display: inline-block;
             width: 20px;
@@ -290,6 +337,10 @@
             .action-buttons {
                 flex-direction: column;
             }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -297,10 +348,15 @@
     <div class="container">
         <div class="header">
             <h1>🎮 Text Adventure Game Generator</h1>
-            <p>Transform storyboards into interactive adventures</p>
+            <p>Enhanced with Dynamic Music Generation</p>
             <div class="api-status" id="apiStatus">
                 <span class="loading"></span> Checking API status...
             </div>
+        </div>
+
+        <div class="new-feature">
+            <h3>🎵 NEW: Dynamic Music Generation!</h3>
+            <p>Your text adventures now include procedural music that changes based on story mood. Experience peaceful melodies, mysterious ambience, dramatic tension, and celebratory fanfares!</p>
         </div>
 
         <div class="form-section">
@@ -316,21 +372,44 @@
             </div>
 
             <div class="form-group">
-                <label for="gameOptions">Generation Options</label>
-                <div style="display: flex; gap: 15px; margin-top: 10px;">
-                    <label style="display: flex; align-items: center; margin-bottom: 0;">
-                        <input type="checkbox" id="enablePixelArt" checked style="width: auto; margin-right: 8px;">
-                        Enable Pixel Art
-                    </label>
-                    <label style="display: flex; align-items: center; margin-bottom: 0;">
-                        <input type="checkbox" id="enableAudio" checked style="width: auto; margin-right: 8px;">
-                        Enable Audio
-                    </label>
+                <label>Enhanced Generation Options</label>
+                <div class="options-grid">
+                    <div class="option-card">
+                        <h4>🎵 Audio Features</h4>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="enableAudio" checked>
+                            <label for="enableAudio" style="margin: 0;">Enable Dynamic Music</label>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="audioStyle" style="font-size: 12px;">Music Style:</label>
+                            <select id="audioStyle" style="padding: 8px; font-size: 12px;">
+                                <option value="retro">Retro 8-bit</option>
+                                <option value="orchestral">Orchestral</option>
+                                <option value="ambient">Ambient</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="option-card">
+                        <h4>🎨 Visual Features</h4>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="enablePixelArt" checked>
+                            <label for="enablePixelArt" style="margin: 0;">Enable Pixel Art</label>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="artStyle" style="font-size: 12px;">Art Style:</label>
+                            <select id="artStyle" style="padding: 8px; font-size: 12px;">
+                                <option value="vineyard">Vineyard Theme</option>
+                                <option value="fantasy">Fantasy Theme</option>
+                                <option value="scifi">Sci-Fi Theme</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <button class="btn" id="generateBtn" onclick="generateGame()">
-                🎮 Generate Adventure Game
+                🎮 Generate Enhanced Adventure Game
             </button>
         </div>
 
@@ -352,6 +431,10 @@
                     <div class="stat-label">Characters</div>
                 </div>
                 <div class="stat">
+                    <div class="stat-number" id="audioTracks">-</div>
+                    <div class="stat-label">Audio Tracks</div>
+                </div>
+                <div class="stat">
                     <div class="stat-number" id="playTime">-</div>
                     <div class="stat-label">Minutes</div>
                 </div>
@@ -368,101 +451,150 @@
             </div>
             
             <div class="info-box">
-                <strong>✅ Your Adventure is Ready!</strong><br>
-                Your game has been generated and is ready to play. Download the HTML file or preview it online.
+                <strong>✅ Your Enhanced Adventure is Ready!</strong><br>
+                Your game includes dynamic music generation and enhanced features. Download the HTML file or preview it online.
             </div>
         </div>
     </div>
 
-    <!-- Load the enhanced generator functions -->
-    <script src="assets/js/enhanced-generator.js"></script>
-    
     <script>
+        // UPDATED: Point to your enhanced API
+        const API_BASE_URL = 'https://textgame.longenterprises.org';
         let currentGameData = null;
 
+        // Check API status on page load
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('apiStatus').className = 'api-status online';
-            document.getElementById('apiStatus').innerHTML = '🟢 Enhanced Client-Side Ready';
+            checkApiStatus();
             loadSample();
         });
+
+        async function checkApiStatus() {
+            const statusElement = document.getElementById('apiStatus');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`);
+                const data = await response.json();
+                
+                if (data.status === 'healthy') {
+                    statusElement.className = 'api-status online';
+                    statusElement.innerHTML = `🟢 API v${data.version || '2.0'} Online`;
+                    
+                    // Show enhanced features status
+                    if (data.features && data.features.enhanced_music) {
+                        statusElement.innerHTML += ' 🎵';
+                    }
+                } else {
+                    throw new Error('API not healthy');
+                }
+            } catch (error) {
+                statusElement.className = 'api-status offline';
+                statusElement.innerHTML = '🔴 API Offline';
+                console.error('API status check failed:', error);
+            }
+        }
 
         function loadSample() {
             const sampleStoryboard = `# The Secret Vineyard Sanctuary
 
-## Core Theme & Concept
+## Overall Theme & Concept
 
 **Core Theme**: Finding balance in midlife through friendship, discovery, and creating something meaningful together.
 
 **Setting**: A hidden, forgotten vineyard on a countryside estate that four friends discover during their annual weekend getaway.
 
-**Central Mystery/Goal**: The creation of the "Elixir of Balance" - a legendary wine that brings clarity and joy to those seeking harmony in life's beautiful chaos.
+**Central Mystery**: The creation of the "Elixir of Balance" - a legendary wine that brings clarity and joy to those seeking harmony in life's beautiful chaos.
 
----
+**Target Audience**: Adults in their 30s-50s who understand the juggling act of family, work, friendships, and personal dreams.
 
-## Characters (Player Characters)
+## The Four Friends (Player Characters)
 
 ### Sam the Planner
+
 * **Personality**: Organized, prepared, detail-oriented, secretly yearns for spontaneity
 * **Special Ability**: Always finds useful items and resources
 * **Character Arc**: Learning to embrace uncertainty and find beauty in unplanned moments
-* **Background**: Manages family schedules like a military operation, slowly learns to delegate
+* **Family Dynamic**: Manages family schedules like a military operation, slowly learns to delegate
 
 ### Riley the Artist
+
 * **Personality**: Creative, intuitive, sees beauty everywhere, sometimes impractical
 * **Special Ability**: Notices hidden details and artistic elements others miss
 * **Character Arc**: Learning to ground dreams in reality while maintaining wonder
-* **Background**: Turns everyday moments into art, teaches kids to see magic in mundane
+* **Family Dynamic**: Turns everyday moments into art, teaches kids to see magic in mundane
 
 ### Morgan the Realist
+
 * **Personality**: Practical, wine-knowledgeable, skeptical but secretly hopeful
 * **Special Ability**: Understands technical aspects of wine-making and problem-solving
 * **Character Arc**: Opening heart to possibility and magic while staying grounded
-* **Background**: The "voice of reason" who slowly learns to trust in wonder
+* **Family Dynamic**: The "voice of reason" who slowly learns to trust in wonder
 
 ### Casey the Dreamer
+
 * **Personality**: Optimistic, plant-intuitive, believes in magic and possibility
 * **Special Ability**: Connects with nature and senses the vineyard's "living spirit"
 * **Character Arc**: Learning to channel dreams into concrete action
-* **Background**: The family cheerleader who sees potential in every challenge
+* **Family Dynamic**: The family cheerleader who sees potential in every challenge
 
----
+## 30-Day Story Arc Structure
 
-## Daily Episodes (Example Structure)
+### WEEK 1: DISCOVERY (Days 1-7)
 
 **Day 1: "The Hidden Gate"**
+
 * Discover the mysterious vineyard gate during estate walk
 * Character selection and first glimpse of the forgotten world
 * **Family Moment**: Spouse texts about kids' schedules
 * **Discovery**: Ancient iron gate with "Harmony Vineyard" nameplate
-* **Choices**: [Examine gate closely] [Check estate map] [Ask friends' opinions] [Try to open immediately]
+* **Mood**: mysterious
 
 **Day 2: "First Steps"**
+
 * Enter the vineyard properly, assess the scope of abandonment
 * Find the original vintner's journal with cryptic notes about the Elixir
 * **Family Moment**: Child calls for homework help via video
 * **Discovery**: The vineyard has three distinct growing areas
-* **Choices**: [Explore the journal carefully] [Investigate the vine rows] [Look for the main building] [Search for more clues about the family]
+* **Mood**: discovery
 
 **Day 3: "The Tool Shed"**
+
 * Explore the old equipment shed, meet quirky local hardware store owner
 * Learn about the vineyard's history from a neighbor who remembers the original family
 * **Family Moment**: Forgotten soccer practice creates scheduling chaos
 * **Discovery**: Original wine-making tools and equipment (some still usable)
-* **Choices**: [Focus on learning from neighbor] [Examine the old tools] [Ask about purchasing supplies] [Invite neighbor to help with restoration]
+* **Mood**: peaceful
 
 **Day 4: "Reading the Vines"**
+
 * Learn to identify different grape varieties and assess soil quality
 * Discover that some vines are rare heritage varieties thought extinct
 * **Family Moment**: Teenager drama requires parental mediation
 * **Discovery**: The vineyard was designed following ancient principles
-* **Choices**: [Document the rare varieties] [Test soil conditions] [Research heritage grape value] [Plan restoration priorities]
+* **Mood**: reflection
 
 **Day 5: "Water Stories"**
+
 * Repair the broken irrigation system, find carved initials and dates
 * Uncover evidence of multiple generations who worked this land
 * **Family Moment**: Anniversary dinner forgotten, spouse understanding but hurt
 * **Discovery**: Underground spring feeds the vineyard naturally
-* **Choices**: [Focus on irrigation repair] [Investigate the carved messages] [Trace the spring's source] [Research the families who lived here]`;
+* **Mood**: dramatic
+
+**Day 6: "The Cellar Door"**
+
+* First proper exploration of the wine cellar, examine ancient barrels
+* Find hidden alcove with bottles from the vineyard's golden age
+* **Family Moment**: Parent-teacher conference via phone during work
+* **Discovery**: Original Elixir recipe hidden in cellar walls
+* **Mood**: mysterious
+
+**Day 7: "Unexpected Harvest"**
+
+* Find some vines have produced viable grapes, make first small test batch
+* Group makes commitment to restore the vineyard over coming weeks
+* **Family Moment**: Kids plan surprise "Good luck with wine!" care package
+* **Discovery**: The wine-making process awakens something dormant in the land
+* **Mood**: celebratory`;
 
             document.getElementById('storyboardInput').value = sampleStoryboard;
         }
@@ -476,53 +608,93 @@
                 return;
             }
 
+            // Disable button and show loading
             btn.disabled = true;
             btn.innerHTML = '<span class="loading"></span> Generating...';
             
+            // Show status
             document.getElementById('statusDiv').style.display = 'block';
             document.getElementById('resultDiv').style.display = 'none';
             
-            updateProgress('Parsing rich storyboard format...', 10);
-
-            await new Promise(resolve => setTimeout(resolve, 800));
-            updateProgress('Extracting character details...', 30);
-            
-            await new Promise(resolve => setTimeout(resolve, 600));
-            updateProgress('Building interactive scenes...', 60);
-            
-            await new Promise(resolve => setTimeout(resolve, 600));
-            updateProgress('Compiling enhanced game...', 90);
+            updateProgress('Parsing storyboard...', 10);
 
             try {
-                // Use the enhanced parser from enhanced-generator.js
-                const gameData = parseStoryboardToGame(storyboardContent);
+                // Get generation options
+                const enableAudio = document.getElementById('enableAudio').checked;
+                const enablePixelArt = document.getElementById('enablePixelArt').checked;
+                const audioStyle = document.getElementById('audioStyle').value;
+                const artStyle = document.getElementById('artStyle').value;
+
+                updateProgress('Generating enhanced content...', 30);
+
+                // Call the ENHANCED API
+                const response = await fetch(`${API_BASE_URL}/api/generate-complete-game`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        storyboardContent: storyboardContent,
+                        options: {
+                            enableAudio: enableAudio,
+                            enablePixelArt: enablePixelArt,
+                            audioStyle: audioStyle,
+                            artStyle: artStyle
+                        }
+                    })
+                });
+
+                updateProgress('Compiling adventure...', 70);
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP ${response.status}`);
+                }
+
+                const result = await response.json();
                 
-                // Generate the enhanced HTML game
-                const gameHTML = createGameHTML(gameData);
-                
+                if (!result.success) {
+                    throw new Error(result.error || 'Generation failed');
+                }
+
                 updateProgress('Complete!', 100);
 
-                currentGameData = {
-                    html: gameHTML,
-                    metadata: {
-                        title: gameData.title,
-                        scenes: gameData.scenes.length,
-                        characters: gameData.characters.length,
-                        fileSize: gameHTML.length,
-                        estimatedPlayTime: gameData.scenes.length * 4
-                    }
-                };
+                // Store game data
+                currentGameData = result.data;
 
+                // Update UI with results
                 setTimeout(() => {
-                    showResults(currentGameData);
+                    showResults(result.data);
                 }, 500);
 
             } catch (error) {
                 console.error('Generation error:', error);
-                showError(error.message);
+                
+                // Show error
+                document.getElementById('statusDiv').style.display = 'none';
+                
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-box';
+                errorDiv.innerHTML = `
+                    <strong>Generation Failed:</strong><br>
+                    ${error.message}<br>
+                    <small>Please check your storyboard format and try again.</small>
+                `;
+                
+                const container = document.querySelector('.container');
+                const formSection = document.querySelector('.form-section');
+                container.insertBefore(errorDiv, formSection.nextSibling);
+                
+                // Remove error after 10 seconds
+                setTimeout(() => {
+                    if (errorDiv.parentNode) {
+                        errorDiv.parentNode.removeChild(errorDiv);
+                    }
+                }, 10000);
             } finally {
+                // Re-enable button
                 btn.disabled = false;
-                btn.innerHTML = '🎮 Generate Adventure Game';
+                btn.innerHTML = '🎮 Generate Enhanced Adventure Game';
             }
         }
 
@@ -534,54 +706,48 @@
         function showResults(gameData) {
             const { metadata } = gameData;
             
-            document.getElementById('sceneCount').textContent = metadata.scenes;
-            document.getElementById('characterCount').textContent = metadata.characters;
-            document.getElementById('playTime').textContent = metadata.estimatedPlayTime;
-            document.getElementById('fileSize').textContent = Math.round(metadata.fileSize / 1024);
+            // Update stats - now including audio tracks
+            document.getElementById('sceneCount').textContent = metadata.scenes || '-';
+            document.getElementById('characterCount').textContent = metadata.characters || '-';
+            document.getElementById('audioTracks').textContent = metadata.audioTracks || '0';
+            document.getElementById('playTime').textContent = metadata.estimatedPlayTime || '-';
+            document.getElementById('fileSize').textContent = Math.round((metadata.fileSize || 0) / 1024) + '';
 
+            // Update action buttons
             const downloadBtn = document.getElementById('downloadBtn');
             const previewBtn = document.getElementById('previewBtn');
             const shareBtn = document.getElementById('shareBtn');
-            
-            downloadBtn.onclick = () => downloadGame(gameData);
+
+            // Set download link
+            downloadBtn.href = `${API_BASE_URL}${gameData.downloadUrl}`;
+            downloadBtn.onclick = () => {
+                console.log('Enhanced game downloaded:', metadata.title);
+            };
+
+            // Set preview function
             previewBtn.onclick = () => previewGame(gameData);
+            
+            // Set share function
             shareBtn.onclick = () => shareGame(gameData);
 
+            // Hide status and show results
             document.getElementById('statusDiv').style.display = 'none';
             document.getElementById('resultDiv').style.display = 'block';
             document.getElementById('resultDiv').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function downloadGame(gameData) {
-            const filename = gameData.metadata.title.toLowerCase().replace(/[^a-z0-9]/g, '_') + '.html';
-            const blob = new Blob([gameData.html], {type: 'text/html'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            console.log('🎮 Game downloaded:', filename);
-        }
-
         function previewGame(gameData) {
-            const blob = new Blob([gameData.html], {type: 'text/html'});
-            const url = URL.createObjectURL(blob);
-            window.open(url, '_blank', 'width=1000,height=800');
-            setTimeout(() => URL.revokeObjectURL(url), 1000);
-            
-            console.log('👁️ Game preview opened');
+            const previewUrl = `${API_BASE_URL}${gameData.gameUrl}`;
+            window.open(previewUrl, '_blank', 'width=900,height=700');
         }
 
         async function shareGame(gameData) {
-            const shareText = `Check out this adventure game I created: "${gameData.metadata.title}"`;
+            const shareUrl = `${API_BASE_URL}${gameData.downloadUrl}`;
             
             try {
-                await navigator.clipboard.writeText(shareText);
+                await navigator.clipboard.writeText(shareUrl);
                 
+                // Show feedback
                 const shareBtn = document.getElementById('shareBtn');
                 const originalText = shareBtn.innerHTML;
                 shareBtn.innerHTML = '✅ Copied!';
@@ -593,25 +759,9 @@
                 }, 2000);
                 
             } catch (error) {
-                prompt('Copy this text to share your game:', shareText);
+                // Fallback for older browsers
+                prompt('Copy this link to share your enhanced game:', shareUrl);
             }
-        }
-
-        function showError(message) {
-            document.getElementById('statusDiv').style.display = 'none';
-            
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'error-box';
-            errorDiv.innerHTML = `
-                <strong>⚠️ Generation Failed:</strong><br>
-                ${message}<br>
-                <small>Check console for details. Make sure enhanced-generator.js is loaded.</small>
-                <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; cursor: pointer;">✕</button>
-            `;
-            
-            const container = document.querySelector('.container');
-            const formSection = document.querySelector('.form-section');
-            container.insertBefore(errorDiv, formSection.nextSibling);
         }
     </script>
 </body>
